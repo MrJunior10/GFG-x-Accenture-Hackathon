@@ -8,7 +8,6 @@ import multer from 'multer';
 import nodemailer from 'nodemailer';
 import fs from 'fs';
 import pkg from 'pdf-parse'; // pdf-parse import for ES Modules
-const pdfParse = pkg;
 import axios from 'axios'; // For calling Ollama API
 
 dotenv.config();
