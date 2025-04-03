@@ -7,8 +7,7 @@ import Candidate from './Candidate.js';
 import multer from 'multer';
 import nodemailer from 'nodemailer';
 import fs from 'fs';
-import pdfParse from 'pdf-parse-debugging-disabled';
- // pdf-parse import for ES Modules
+import pdfParse from 'pdf-parse-debugging-disabled'; // using debugging-disabled version
 import axios from 'axios'; // For calling Ollama API
 
 dotenv.config();
@@ -64,10 +63,10 @@ async function extractTextFromPDF(filePath) {
 // Ollama helper: Send prompt to local LLM (e.g., Mistral via Ollama)
 async function askOllama(prompt) {
   try {
-    console.log('🧠 Prompt sent to Ollama:\n', prompt); // <--- 👈 Add this line here!
+    console.log('🧠 Prompt sent to Ollama:\n', prompt);
 
     const res = await axios.post('http://localhost:11434/api/generate', {
-      model: 'mistral', // Change this if your model name is different
+      model: 'mistral',
       prompt,
       stream: false
     });
@@ -78,7 +77,6 @@ async function askOllama(prompt) {
     return null;
   }
 }
-
 
 // -------------------------
 // JD Summarizer Agent: Summarizes raw JD text using local LLM
@@ -129,7 +127,6 @@ async function scoreCandidateLLM(resumeText, jdSummary) {
   const score = parseFloat(response);
   return isNaN(score) ? 0 : score;
 }
-
 
 // Fallback: Basic keyword matching if no JD summary available
 function calculateKeywordMatchScore(resumeText, jdText) {
@@ -320,6 +317,17 @@ app.post('/candidates/:id/send-invite', async (req, res) => {
     console.error(err);
     return res.status(500).json({ error: 'Email sending failed' });
   }
+});
+
+// -------------------------
+// Serve React frontend build (added to fix "Cannot GET /")
+import path from 'path';
+import { fileURLToPath } from 'url';
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+app.use(express.static(path.join(__dirname, 'dist')));
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
 
 // -------------------------
