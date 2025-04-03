@@ -7,7 +7,8 @@ import Candidate from './Candidate.js';
 import multer from 'multer';
 import nodemailer from 'nodemailer';
 import fs from 'fs';
-import pkg from 'pdf-parse'; // pdf-parse import for ES Modules
+import pdfParse from 'pdf-parse-debugging-disabled';
+ // pdf-parse import for ES Modules
 import axios from 'axios'; // For calling Ollama API
 
 dotenv.config();
